@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Insert title here</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta charset="utf-8">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<style>
+		body {
+			background-color: #eee;
+		}
+
+		.mt-70 {
+			margin-top: 70px;
+		}
+
+		.mb-70 {
+			margin-bottom: 70px;
+		}
+
+		.card {
+			box-shadow: 0 0.46875rem 2.1875rem rgba(4, 9, 20, 0.03), 0 0.9375rem 1.40625rem rgba(4, 9, 20, 0.03), 0 0.25rem 0.53125rem rgba(4, 9, 20, 0.05), 0 0.125rem 0.1875rem rgba(4, 9, 20, 0.03);
+			border-width: 0;
+			transition: all .2s;
+		}
+
+		.card {
+			position: relative;
+			display: flex;
+			flex-direction: column;
+			min-width: 0;
+			word-wrap: break-word;
+			background-color: #fff;
+			background-clip: border-box;
+			border: 1px solid rgba(26, 54, 126, 0.125);
+			border-radius: .25rem;
+		}
+
+		.card-body {
+			flex: 1 1 auto;
+			padding: 1.25rem;
+		}
+
+		.vertical-timeline {
+			width: 100%;
+			position: relative;
+			padding: 1.5rem 0 1rem;
+		}
+
+		.vertical-timeline::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 67px;
+			height: 100%;
+			width: 4px;
+			background: #e9ecef;
+			border-radius: .25rem;
+		}
+
+		.vertical-timeline-element {
+			position: relative;
+			margin: 0 0 1rem;
+		}
+
+		.vertical-timeline--animate .vertical-timeline-element-icon.bounce-in {
+			visibility: visible;
+			animation: cd-bounce-1 .8s;
+		}
+
+		.vertical-timeline-element-icon {
+			position: absolute;
+			top: 0;
+			left: 60px;
+		}
+
+		.vertical-timeline-element-icon .badge-dot-xl {
+			box-shadow: 0 0 0 5px #fff;
+		}
+
+		.badge-dot-xl {
+			width: 18px;
+			height: 18px;
+			position: relative;
+		}
+
+		.badge:empty {
+			display: none;
+		}
+
+
+		.badge-dot-xl::before {
+			content: '';
+			width: 10px;
+			height: 10px;
+			border-radius: .25rem;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			margin: -5px 0 0 -5px;
+			background: #fff;
+		}
+
+		.vertical-timeline-element-content {
+			position: relative;
+			margin-left: 90px;
+			font-size: .8rem;
+		}
+
+		.vertical-timeline-element-content .timeline-title {
+			font-size: .8rem;
+			text-transform: uppercase;
+			margin: 0 0 .5rem;
+			padding: 2px 0 0;
+			font-weight: bold;
+		}
+
+		.vertical-timeline-element-content .vertical-timeline-element-date {
+			display: block;
+			position: absolute;
+			left: -90px;
+			top: 0;
+			padding-right: 10px;
+			text-align: right;
+			color: #adb5bd;
+			font-size: .7619rem;
+			white-space: nowrap;
+		}
+
+		.vertical-timeline-element-content:after {
+			content: "";
+			display: table;
+			clear: both;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="modal  fade" id="modalEditar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Editar Veículo</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<div class="row">
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Placa:
+							</label>
+							<label id="EDITAR-PLACA"></label>
+						</div>
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Condutor:
+							</label>
+							<label id="EDITAR-CONDUTOR"></label>
+						</div>
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Hora de
+								entrada: </label>
+							<label id="EDITAR-HORAENTRADA"></label>
+						</div>
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Hora de saída:
+							</label>
+							<label id="EDITAR-HORASAIDA"></label>
+							<input type="datetime-local" class="form-control" id="EDITAR-HORASAIDAEEDITAR"
+								aria-describedby="emailHelp">
+						</div>
+					</div>
+
+
+					<div class="row">
+						<div class="mb-3 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+							<label for="exampleInputEmail1" class="form-label"
+								style="font-weight: bold;">Observação:</label>
+							<label id="EDITAR-OBSERVACAO"></label>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Cor: </label>
+							<label id="EDITAR-COR"></label>
+						</div>
+						<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+							<label for="exampleInputEmail1" class="form-label" style="font-weight: bold;">Modelo:
+							</label>
+							<label id="EDITAR-MODELO"></label>
+						</div>
+					</div>
+
+					<div class="container main-card mb-3 card">
+						<div class="row">
+							<div class="row">
+								<div class="mb-3 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+									<label class="form-label">Tipo</label>
+									<select class="form-select" id="EDITAR-TIPO-HISTORICO"></select>
+									<div id="emailHelp" class="form-text">* Selecione o tipo.</div>
+								</div>
+							</div>
+							<div class="mb-3">
+								<label for="exampleInputEmail1" class="form-label">Histórico</label>
+								<textarea type="email" class="form-control" id="EDITAR-HISTORICO"></textarea>
+								<div id="emailHelp" class="form-text">* Insira um histórico para o veículo.</div>
+							</div>
+							<div class="col-12">
+								<button type="button" class="btn btn-primary mb-3" onclick="salvar()">Adicionar
+									histórico</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="container">
+						<div class="main-card mb-3 card">
+							<div class="card-body">
+								<h5 class="card-title">Histórico</h5>
+								<div class="vertical-timeline vertical-timeline--animate vertical-timeline--one-column">
+									<div class="vertical-timeline-item vertical-timeline-element">
+										<div>
+
+											<div class="vertical-timeline-element-content bounce-in">
+												<h4 class="timeline-title">Meeting with client</h4>
+												<p>Meeting with USA Client, today at <a href="javascript:void(0);"
+														data-abc="true">12:00
+														PM</a></p>
+												<span class="vertical-timeline-element-date">9:30 AM</span>
+											</div>
+										</div>
+									</div>
+									<div class="vertical-timeline-item vertical-timeline-element">
+										<div>
+
+											<div class="vertical-timeline-element-content bounce-in">
+												<p>Another meeting with UK client today, at <b class="text-danger">3:00
+														PM</b></p>
+												<p>Yet another one, at <span class="text-success">5:00 PM</span></p>
+												<span class="vertical-timeline-element-date">12:25 PM</span>
+											</div>
+										</div>
+									</div>
+
+
+
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Adicionar Veículo</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+
+
+					<form>
+
+						<div class="row">
+							<div class="mb-3 col-sm-3 col-md-3 col-lg-3 col-xl-3 col-xxl-3">
+								<label for="exampleInputEmail1" class="form-label">Placa</label>
+								<input id="PLACA-VEICULO" type="email" class="form-control" id="exampleInputEmail1"
+									aria-describedby="emailHelp">
+								<div id="emailHelp" class="form-text">* Placa do veículo</div>
+							</div>
+							<div class="mb-3 col-sm-5 col-md-5 col-lg-5 col-xl-5 col-xxl-5">
+								<label for="exampleInputEmail1" class="form-label">Condultor</label>
+								<input type="email" class="form-control" id="CONDULTOR" aria-describedby="emailHelp">
+								<div id="emailHelp" class="form-text">* Quem conduziu o veículo até o local</div>
+							</div>
+							<div class="mb-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
+								<label for="exampleInputEmail1" class="form-label">* Data de Entrada</label>
+								<input type="datetime-local" class="form-control" id="DATA-ENTRADA"
+									aria-describedby="emailHelp">
+							</div>
+							<div class="mb-3 col-sm-2 col-md-2 col-lg-2 col-xl-2 col-xxl-2">
+								<label for="exampleInputEmail1" class="form-label">Data de Saída</label>
+								<input type="datetime-local" class="form-control" id="DATA-SAIDA"
+									aria-describedby="emailHelp">
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="mb-3">
+								<label for="exampleInputEmail1" class="form-label">Observação</label>
+								<textarea type="email" class="form-control" id="OBSERVACAO"
+									aria-describedby="emailHelp"></textarea>
+								<div id="emailHelp" class="form-text">* Informe qualquer anormalidade encontrada no
+									veículo.</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="mb-3 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+								<label class="form-label">Cor</label>
+								<select class="form-select" id="SELECT-CORES"></select>
+								<div id="emailHelp" class="form-text">* Selecione a cor do veículo</div>
+							</div>
+							<div class="mb-3 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+								<label class="form-label">Fabricante</label>
+								<select class="form-select" id="SELECT-FABRICANTES"
+									onchange="selecionarModelo(this)"></select>
+								<div id="emailHelp" class="form-text">* Selecione o fabricante do veículo</div>
+							</div>
+							<div class="mb-3 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
+								<label class="form-label">Modelo</label>
+								<select class="form-select" id="SELECT-MODELOS"></select>
+								<div id="emailHelp" class="form-text">* Selecione o modelo do veículo</div>
+							</div>
+						</div>
+					</form>
+
+
+
+
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" onclick="salvar()">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var cores = [];
+		var fabricantes = [];
+
+		function selecionarModelo(fabricantesOption) {
+			while (document.querySelector("#SELECT-MODELOS").children.length > 0) {
+				for (let x = 0; x < document.querySelector("#SELECT-MODELOS").children.length; x++) {
+					document.querySelector("#SELECT-MODELOS").children[x].remove()
+				}
+			}
+			let modelos = JSON.parse(document.querySelector("#SELECT-FABRICANTES").options[document.querySelector("#SELECT-FABRICANTES").selectedIndex].dataset.modelos);
+			modelos.map((e) => {
+				opt = document.createElement("option")
+				opt.value = e.id;
+				opt.innerText = e.nome
+				document.querySelector("#SELECT-MODELOS").append(opt)
+			})
+		}
+
+		function atualizarCampos() {
+			setTimeout(() => {
+				while (document.querySelector("#SELECT-CORES").children.length > 0) {
+					for (let x = 0; x < document.querySelector("#SELECT-CORES").children.length; x++) {
+						document.querySelector("#SELECT-CORES").children[x].remove()
+					}
+				}
+
+				while (document.querySelector("#SELECT-FABRICANTES").children.length > 0) {
+					for (let x = 0; x < document.querySelector("#SELECT-FABRICANTES").children.length; x++) {
+						document.querySelector("#SELECT-FABRICANTES").children[x].remove()
+					}
+				}
+
+				if (cores.length > 0) {
+					let htmlCores = '<select class="form-select" id="SELECT-CORES">';
+					cores.map((e) => {
+						htmlCores += '<option value="' + e.id + '">' + e.nome + '</option>';
+					});
+					htmlCores += '</select>';
+
+					document.querySelector("#SELECT-CORES").innerHTML = htmlCores;
+				}
+
+				if (fabricantes.length > 0) {
+					fabricantes.map((e) => {
+						opt = document.createElement("option")
+						opt.value = e.id;
+						opt.innerText = e.nome
+						opt.dataset.modelos = JSON.stringify(e.modelos)
+						document.querySelector("#SELECT-FABRICANTES").append(opt)
+					});
+
+				}
+			}, 1000)
+		}
+
+		var myModalEl = document.getElementById('exampleModal')
+		myModalEl.addEventListener('hidden.bs.modal', function (event) {
+			console.log("fechou")
+			console.log(cores)
+			console.log(fabricantes)
+		})
+		var myModalEl = document.getElementById('exampleModal')
+		myModalEl.addEventListener('show.bs.modal', function (event) {
+
+
+
+			const xhr2 = new XMLHttpRequest();
+			xhr2.open('GET', 'http://localhost:8080/cor');
+			xhr2.onload = function () {
+				if (xhr2.status === 200) {
+					cores = JSON.parse(xhr2.responseText);
+
+				} else {
+					alert("Não foi possível localizar cores!")
+				}
+			};
+			xhr2.send();
+
+
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', 'http://localhost:8080/fabricante');
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					fabricantes = JSON.parse(xhr.responseText);
+
+				} else {
+					alert("Não foi possível localizar fabricantes!")
+				}
+			};
+			xhr.send();
+
+			atualizarCampos();
+
+		})
+
+		function salvar() {
+			if (
+				document.querySelector("#CONDULTOR").value != ""
+				&& document.querySelector("#DATA-ENTRADA").value != ""
+				&& document.querySelector("#OBSERVACAO").value != ""
+				&& document.querySelector("#PLACA-VEICULO").value != ""
+				&& document.querySelector("#SELECT-CORES").selectedIndex != -1
+				&& document.querySelector("#SELECT-MODELOS").selectedIndex != -1
+			) {
+				if (validateDates(document.getElementById("DATA-ENTRADA").value, document.getElementById("DATA-SAIDA").value)) {
+					let modeloTemp = {}
+					for (let x = 0; x < fabricantes.length; x++) {
+						if (fabricantes[x].modelos.length > 0) {
+							for (let x2 = 0; x2 < fabricantes[x].modelos.length; x2++) {
+								if (fabricantes[x].modelos[x2].id == document.querySelector("#SELECT-MODELOS").options[document.querySelector("#SELECT-MODELOS").selectedIndex].value) {
+									modeloTemp = fabricantes[x].modelos[x2];
+									break;
+								}
+							}
+						}
+					}
+
+					var xhttp = new XMLHttpRequest();
+					xhttp.onreadystatechange = function () {
+						if (this.readyState == 4 && this.status == 200) {
+
+							var myModalEl = document.getElementById('exampleModal')
+							var modal = bootstrap.Modal.getInstance(myModalEl)
+							modal.hide();
+							atualizarTabelaVeiculos();
+							document.querySelector("#CONDULTOR").value = ""
+							document.querySelector("#DATA-ENTRADA").value = "";
+							document.querySelector("#OBSERVACAO").value = "";
+							document.querySelector("#PLACA-VEICULO").value = "";
+						}
+					};
+					xhttp.open("POST", "http://localhost:8080/veiculo", true);
+					xhttp.setRequestHeader("Content-type", "application/json");
+					xhttp.send(JSON.stringify({
+						id: null,
+						condultor: document.querySelector("#CONDULTOR").value,
+						hora_entrada: document.querySelector("#DATA-ENTRADA").value,
+						hora_saida: document.querySelector("#DATA-SAIDA").value,
+						observacao: document.querySelector("#OBSERVACAO").value,
+						placa: document.querySelector("#PLACA-VEICULO").value,
+						cor: cores.filter((e) => {if (e.id == JSON.parse(document.querySelector("#SELECT-CORES").options[document.querySelector("#SELECT-CORES").selectedIndex].value)) {return e} })[0],
+						modelo: modeloTemp
+					}));
+				}
+			} else {
+				alert("Preencha todos os campos!");
+			}
+		}
+	</script>
+
+
+
+
+	<div class="container">
+
+		<button type="button" class="btn btn-primary mt-5" data-bs-toggle="modal" data-bs-target="#exampleModal">
+			Adicionar Veículo
+		</button>
+
+		<div class="mt-5 container">
+			<div class="alert alert-warning alert-dismissible fade show" role="alert">
+				<h4 class="alert-heading">Atenção <button type="button" class="btn-close" data-bs-dismiss="alert"
+						aria-label="Close"></button></h4>
+				<p>Prezamos pela honestidade e caráter de nossos funcionários, todos os dados inseridos deverão
+					corresponde com os fatos e esperamos imparcialidade nas análises feitas nos veículos, por segurança
+					não será possível editar os veículos já inseridos e nem removê-los, somente será possível adicionar
+					novos históricos de processos internos em veículos já cadastrados, caso haja algum erro deverá
+					enviado para o nosso contato explicando o acontecido urgentemente.</p>
+				<hr>
+				<p class="mb-0">Qualquer informação errada resultará em consequência judiciais segundo a Lei
+					federal...... para dúvidas entre em contato com <a href="mailto:contato@contado.com.br">
+						contato@contado.com.br</a></p>
+			</div>
+		</div>
+
+		<table class="table mt-5">
+			<thead>
+				<tr>
+					<th scope="col">ID</th>
+					<th scope="col">PLACA</th>
+					<th scope="col">CONDUTOR</th>
+					<th scope="col">MODELO</th>
+					<th scope="col">HORA DE ENTRADA</th>
+					<th scope="col">HORA DE SAÍDA</th>
+					<th scope="col">HISTÓRICO</th>
+					<th scope="col">AÇÃO</th>
+				</tr>
+			</thead>
+			<tbody id="TABELA-CARROS">
+
+			</tbody>
+		</table>
+
+
+
+	</div>
+	<script>
+		var veiculos = [];
+
+		function atualizarTabelaVeiculos() {
+
+			while (document.querySelector("#TABELA-CARROS").children.length > 0) {
+				for (let x = 0; x < document.querySelector("#TABELA-CARROS").children.length; x++) {
+					document.querySelector("#TABELA-CARROS").children[x].remove()
+				}
+			}
+
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', 'http://localhost:8080/veiculo');
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+
+					var veiculos = JSON.parse(xhr.responseText);
+
+					if (veiculos.length > 0) {
+						for (let x = 0; x < veiculos.length; x++) {
+							let trElement = document.createElement("tr");
+
+							let tdElementId = document.createElement("td");
+							tdElementId.innerHTML = veiculos[x].id;
+							let tdElementPlaca = document.createElement("td");
+							tdElementPlaca.innerHTML = veiculos[x].placa;
+							let tdElementCondutor = document.createElement("td");
+							tdElementCondutor.innerHTML = veiculos[x].condultor;
+							let tdElementModelo = document.createElement("td");
+							tdElementModelo.innerHTML = veiculos[x].modelo != null ? veiculos[x].modelo.nome : "";
+							let tdElementHoraentrada = document.createElement("td");
+							tdElementHoraentrada.innerHTML = formatarData(veiculos[x].hora_entrada);
+							let tdElementHorasaida = document.createElement("td");
+							tdElementHorasaida.innerHTML = formatarData(veiculos[x].hora_saida);
+							let tdElementQuantidadehistorico = document.createElement("td");
+							tdElementQuantidadehistorico.innerHTML = veiculos[x].historicos != null ? veiculos[x].historicos.length : 0;
+
+							let btnAdicionarHistorico = document.createElement("button");
+							btnAdicionarHistorico.innerText = "Editar";
+							btnAdicionarHistorico.className = "btn btn-primary mb-3";
+							btnAdicionarHistorico.type = "button"
+							btnAdicionarHistorico.onclick = () => {editarModal(veiculos[x])}
+
+							trElement.append(tdElementId);
+							trElement.append(tdElementPlaca);
+							trElement.append(tdElementCondutor);
+							trElement.append(tdElementModelo);
+							trElement.append(tdElementHoraentrada);
+							trElement.append(tdElementHorasaida);
+							trElement.append(tdElementQuantidadehistorico);
+
+							trElement.append(btnAdicionarHistorico);
+
+							document.querySelector("#TABELA-CARROS").append(trElement);
+						}
+					}
+
+
+				} else {
+					alert('Erro:', xhr.status);
+				}
+			};
+			xhr.send();
+		}
+
+		atualizarTabelaVeiculos();
+
+		function editarModal(veiculo) {
+			console.log(veiculo);
+			var myModal = new bootstrap.Modal(document.getElementById('modalEditar'), {
+				keyboard: false
+			});
+			myModal.show()
+			document.querySelector("#EDITAR-PLACA").innerText = veiculo.placa;
+			document.querySelector("#EDITAR-CONDUTOR").innerText = veiculo.condultor;
+			document.querySelector("#EDITAR-HORAENTRADA").innerText = formatarData(veiculo.hora_entrada);
+			if (veiculo.hora_saida != "") {
+				document.querySelector("#EDITAR-HORASAIDA").innerText = formatarData(veiculo.hora_saida);
+				document.querySelector("#EDITAR-HORASAIDAEEDITAR").style.display = "none"
+			} else {
+				document.querySelector("#EDITAR-HORASAIDA").style.display = "none"
+			}
+
+			document.querySelector("#EDITAR-OBSERVACAO").innerText = veiculo.observacao;
+			document.querySelector("#EDITAR-COR").innerText = veiculo.cor.nome;
+			document.querySelector("#EDITAR-MODELO").innerText = veiculo.modelo.nome;
+
+
+
+
+		}
+
+		function formatarData(dataString) {
+			const dates = new Date(dataString);
+			return dates.toLocaleString('pt-BR', {timeZone: 'UTC'});
+		}
+
+		function validateDates(firstDate, secondDate) {
+			if (firstDate && secondDate) {
+				if (secondDate < firstDate) {
+					alert("A segunda data de saída pode ser inferior que a primeira!");
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
+		}
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/imask"></script>
+	<script>
+		const element = document.getElementById('PLACA-VEICULO');
+		const maskOptions = {
+			mask: 'aaa-0*00'
+		};
+		const mask = IMask(element, maskOptions);
+	</script>
+
+</body>
+
+</html>
