@@ -1,1 +1,1 @@
-<img src="Tela.png" />
+<img src="TelaCorrigida.png" />
