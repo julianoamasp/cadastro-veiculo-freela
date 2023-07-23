@@ -24,6 +24,12 @@ public class VeiculoController {
         return ResponseEntity.ok(veiculos);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Veiculo> buscarVeiculoPorId(@PathVariable Long id) {
+        Veiculo veiculo = veiculoService.buscarVeiculoPorId(id);
+        return ResponseEntity.ok(veiculo);
+    }
+    
     @PostMapping
     public ResponseEntity<Veiculo> cadastrarVeiculo(@RequestBody Veiculo veiculo) {
         Veiculo veiculoSalvo = veiculoService.cadastrarVeiculo(veiculo);
@@ -34,7 +40,7 @@ public class VeiculoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Veiculo> atualizarVeiculo(@PathVariable Long id, @RequestBody Veiculo veiculo) {
-        Veiculo veiculoAtualizado = veiculoService.atualizarVeiculo(id, veiculo);
+        Veiculo veiculoAtualizado = veiculoService.atualizarVeiculo(veiculo);
         return ResponseEntity.ok(veiculoAtualizado);
     }
 

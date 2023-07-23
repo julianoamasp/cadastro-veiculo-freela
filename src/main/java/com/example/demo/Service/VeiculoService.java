@@ -25,11 +25,13 @@ public class VeiculoService {
         return veiculoRepository.save(veiculo);
     }
 
-    public Veiculo atualizarVeiculo(Long id, Veiculo veiculo) {
-        Veiculo veiculoSalvo = buscarVeiculoPorId(id);
-        veiculoSalvo.setPlaca(veiculo.getPlaca());
-        veiculoSalvo.setCor(veiculo.getCor());
-        return veiculoRepository.save(veiculoSalvo);
+    //public Veiculo atualizarVeiculo(Long id, Veiculo veiculo) {
+    public Veiculo atualizarVeiculo(Veiculo veiculo) {
+        //Veiculo veiculoSalvo = buscarVeiculoPorId(id);
+        //veiculoSalvo.setPlaca(veiculo.getPlaca());
+        //veiculoSalvo.setCor(veiculo.getCor());
+        //return veiculoRepository.save(veiculoSalvo);
+    	return veiculoRepository.save(veiculo);
     }
 
     public void excluirVeiculo(Long id) {
@@ -37,7 +39,7 @@ public class VeiculoService {
         veiculoRepository.delete(veiculo);
     }
 
-    private Veiculo buscarVeiculoPorId(Long id) {
+    public Veiculo buscarVeiculoPorId(Long id) {
         return veiculoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
     }

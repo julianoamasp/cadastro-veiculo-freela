@@ -197,20 +197,14 @@
 
 					<div class="container main-card mb-3 card">
 						<div class="row">
-							<div class="row">
-								<div class="mb-3 col-sm-4 col-md-4 col-lg-4 col-xl-4 col-xxl-4">
-									<label class="form-label">Tipo</label>
-									<select class="form-select" id="EDITAR-TIPO-HISTORICO"></select>
-									<div id="emailHelp" class="form-text">* Selecione o tipo.</div>
-								</div>
-							</div>
 							<div class="mb-3">
 								<label for="exampleInputEmail1" class="form-label">Histórico</label>
 								<textarea type="email" class="form-control" id="EDITAR-HISTORICO"></textarea>
 								<div id="emailHelp" class="form-text">* Insira um histórico para o veículo.</div>
 							</div>
 							<div class="col-12">
-								<button type="button" class="btn btn-primary mb-3" onclick="salvar()">Adicionar
+								<button type="button" class="btn btn-primary mb-3"
+									onclick="adicionarHistorico()">Adicionar
 									histórico</button>
 							</div>
 						</div>
@@ -581,11 +575,17 @@
 							let tdElementQuantidadehistorico = document.createElement("td");
 							tdElementQuantidadehistorico.innerHTML = veiculos[x].historicos != null ? veiculos[x].historicos.length : 0;
 
+
+
 							let btnAdicionarHistorico = document.createElement("button");
 							btnAdicionarHistorico.innerText = "Editar";
 							btnAdicionarHistorico.className = "btn btn-primary mb-3";
 							btnAdicionarHistorico.type = "button"
+
 							btnAdicionarHistorico.onclick = () => {editarModal(veiculos[x])}
+
+							let tdBtnAcao = document.createElement("td");
+							tdBtnAcao.append(btnAdicionarHistorico);
 
 							trElement.append(tdElementId);
 							trElement.append(tdElementPlaca);
@@ -595,7 +595,7 @@
 							trElement.append(tdElementHorasaida);
 							trElement.append(tdElementQuantidadehistorico);
 
-							trElement.append(btnAdicionarHistorico);
+							trElement.append(tdBtnAcao);
 
 							document.querySelector("#TABELA-CARROS").append(trElement);
 						}
@@ -608,37 +608,100 @@
 			};
 			xhr.send();
 		}
-
 		atualizarTabelaVeiculos();
 
+
+
+
+
+		var veiculoEditar = {};
 		function editarModal(veiculo) {
-			console.log(veiculo);
+			veiculoEditar = veiculo;
 			var myModal = new bootstrap.Modal(document.getElementById('modalEditar'), {
 				keyboard: false
 			});
 			myModal.show()
-			document.querySelector("#EDITAR-PLACA").innerText = veiculo.placa;
-			document.querySelector("#EDITAR-CONDUTOR").innerText = veiculo.condultor;
-			document.querySelector("#EDITAR-HORAENTRADA").innerText = formatarData(veiculo.hora_entrada);
-			if (veiculo.hora_saida != "") {
-				document.querySelector("#EDITAR-HORASAIDA").innerText = formatarData(veiculo.hora_saida);
-				document.querySelector("#EDITAR-HORASAIDAEEDITAR").style.display = "none"
-			} else {
-				document.querySelector("#EDITAR-HORASAIDA").style.display = "none"
+			atualizarVeiculo();
+		}
+		function atualizarVeiculo() {
+			document.querySelector("#modalEditar > div > div > div.modal-body > div:nth-child(5) > div > div > div").innerHTML = "";
+			let veiculo = veiculoEditar;
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', 'http://localhost:8080/veiculo/' + veiculo.id);
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+
+					var veiculo = JSON.parse(xhr.responseText);
+
+					document.querySelector("#EDITAR-PLACA").innerText = veiculo.placa;
+					document.querySelector("#EDITAR-CONDUTOR").innerText = veiculo.condultor;
+					document.querySelector("#EDITAR-HORAENTRADA").innerText = formatarData(veiculo.hora_entrada);
+					if (veiculo.hora_saida != "") {
+						document.querySelector("#EDITAR-HORASAIDA").innerText = formatarData(veiculo.hora_saida);
+						document.querySelector("#EDITAR-HORASAIDAEEDITAR").style.display = "none"
+					} else {
+						document.querySelector("#EDITAR-HORASAIDA").style.display = "none"
+					}
+
+					document.querySelector("#EDITAR-OBSERVACAO").innerText = veiculo.observacao;
+					document.querySelector("#EDITAR-COR").innerText = veiculo.cor.nome;
+					document.querySelector("#EDITAR-MODELO").innerText = veiculo.modelo.nome;
+
+					if (veiculo.historicos.length > 0) {
+						let html = "";
+						for (let x = 0; x < veiculo.historicos.length; x++) {
+							html += `<div class="vertical-timeline-item vertical-timeline-element"><div><div class="vertical-timeline-element-content bounce-in"><h4 class="timeline-title">` + veiculo.historicos[x].descricao + `</h4></div></div></div>`
+						}
+						document.querySelector("#modalEditar > div > div > div.modal-body > div:nth-child(5) > div > div > div").innerHTML = html;
+					}
+				}
 			}
-
-			document.querySelector("#EDITAR-OBSERVACAO").innerText = veiculo.observacao;
-			document.querySelector("#EDITAR-COR").innerText = veiculo.cor.nome;
-			document.querySelector("#EDITAR-MODELO").innerText = veiculo.modelo.nome;
-
-
-
-
+			xhr.send();
 		}
 
+		function adicionarHistorico() {
+			if (document.querySelector("#EDITAR-HISTORICO").value != "") {
+				let veiculo = veiculoEditar;
+				veiculo.historicos.push({descricao: document.querySelector("#EDITAR-HISTORICO").value});
+				const xhr = new XMLHttpRequest();
+				xhr.open('PUT', 'http://localhost:8080/veiculo/' + veiculo.id);
+				xhr.onload = function () {
+					if (xhr.status === 200) {
+						document.querySelector("#EDITAR-HISTORICO").value = "";
+						atualizarVeiculo();
+						alert("Histórico adicionado!");
+					} else {
+						alert("Erro ao aidicionar o Histórico!");
+					}
+				}
+				xhr.send(JSON.stringify(veiculo));
+			} else {
+				alert("Preencha a descrição!");
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		function formatarData(dataString) {
-			const dates = new Date(dataString);
-			return dates.toLocaleString('pt-BR', {timeZone: 'UTC'});
+			if (dataString != null) {
+				const dates = new Date(dataString);
+				return dates.toLocaleString('pt-BR', {timeZone: 'UTC'});
+			} else {
+				return "";
+			}
 		}
 
 		function validateDates(firstDate, secondDate) {
